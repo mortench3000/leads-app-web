@@ -1,0 +1,22 @@
+name: S3 Sync
+on [push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Sync to S3
+        uses: raulanatol/aws-s3-docker-action@master
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: eu-north-1
+          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+          SOURCE: web/
+          TARGET: /
+          WITH_DELETE: YES
+          WITH_CLOUD_FRONT_INVALIDATION: YES
+          AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+          AWS_CLOUDFRONT_INVALIDATION_PATH: /*
